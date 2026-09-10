@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harsh Ahuja — Cybersecurity Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0F14;
+    --panel: #121822;
+    --panel-alt: #161D29;
+    --border: #232B38;
+    --border-soft: #1A212C;
+    --text: #DCE3EA;
+    --text-dim: #8B96A5;
+    --text-faint: #566072;
+    --amber: #E8A33D;
+    --amber-dim: #8A6427;
+    --blue: #5B9DD9;
+    --green: #5FBF7A;
+    --grey-status: #6B7684;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(91,157,217,0.06), transparent 40%),
+      radial-gradient(circle at 85% 20%, rgba(232,163,61,0.05), transparent 45%);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{ color: var(--blue); }
+  ::selection{ background: var(--amber-dim); color: #fff; }
+
+  .wrap{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .mono{ font-family: 'IBM Plex Mono', monospace; }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    border-bottom: 1px solid var(--border-soft);
+    padding: 18px 0;
+    position: sticky;
+    top: 0;
+    background: rgba(11,15,20,0.92);
+    backdrop-filter: blur(6px);
+    z-index: 10;
+  }
+  .topbar .wrap{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .topbar .id{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  .topbar .id b{ color: var(--amber); font-weight: 500; }
+  .topbar nav{ display:flex; gap: 22px; }
+  .topbar nav a{
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: color 0.15s;
+  }
+  .topbar nav a:hover{ color: var(--text); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .status-row{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin-bottom: 22px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--green);
+  }
+  .pulse-dot{
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 rgba(95,191,122,0.6);
+    animation: pulse 2.2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(95,191,122,0.45); }
+    70%{ box-shadow: 0 0 0 8px rgba(95,191,122,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(95,191,122,0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .pulse-dot{ animation: none; }
+  }
+
+  h1{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 52px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.05;
+  }
+  .role-line{
+    font-size: 18px;
+    color: var(--text-dim);
+    margin: 0 0 28px;
+  }
+  .role-line span{ color: var(--text); }
+
+  .hero-summary{
+    max-width: 640px;
+    font-size: 15.5px;
+    color: var(--text-dim);
+    border-left: 2px solid var(--amber-dim);
+    padding-left: 16px;
+    margin-bottom: 30px;
+  }
+
+  .contact-row{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+  .contact-row a, .contact-row span{
+    color: var(--text-dim);
+    text-decoration: none;
+  }
+  .contact-row a:hover{ color: var(--amber); }
+
+  /* ---------- section shell ---------- */
+  section{ padding: 52px 0; border-bottom: 1px solid var(--border-soft); }
+  section:last-of-type{ border-bottom: none; }
+  .section-head{
+    display:flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .section-head h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .section-head .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-faint);
+  }
+
+  /* ---------- experience / project cards (ticket style) ---------- */
+  .ticket{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+  }
+  .ticket-top{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .ticket-id{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .badge.active{ color: var(--green); border-color: rgba(95,191,122,0.35); background: rgba(95,191,122,0.07); }
+  .badge.closed{ color: var(--grey-status); border-color: rgba(107,118,132,0.35); background: rgba(107,118,132,0.06); }
+  .badge.complete{ color: var(--blue); border-color: rgba(91,157,217,0.35); background: rgba(91,157,217,0.07); }
+
+  .ticket h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 4px 0 2px;
+  }
+  .ticket .org{
+    color: var(--amber);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .ticket .dates{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+  }
+  .ticket ul{
+    margin: 0;
+    padding-left: 18px;
+    color: var(--text-dim);
+    font-size: 14.5px;
+  }
+  .ticket li{ margin-bottom: 6px; }
+  .ticket li::marker{ color: var(--text-faint); }
+
+  /* ---------- skills ---------- */
+  .skill-group{
+    margin-bottom: 20px;
+  }
+  .skill-group h4{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    font-weight: 500;
+    margin: 0 0 10px;
+  }
+  .tag-row{ display:flex; flex-wrap: wrap; gap: 8px; }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text);
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 5px 10px;
+  }
+
+  /* ---------- certifications (log list) ---------- */
+  .log{
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .log-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 14.5px;
+    gap: 16px;
+  }
+  .log-row:last-child{ border-bottom: none; }
+  .log-row .cert-name{ color: var(--text); }
+  .log-row .cert-year{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+
+  /* ---------- education ---------- */
+  .edu{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+  }
+  .edu h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 17px;
+    margin: 0 0 4px;
+  }
+  .edu .school{ color: var(--amber); font-size: 14px; margin-bottom: 2px; }
+  .edu .years{ font-family:'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--text-faint); }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding: 44px 0 60px;
+    text-align: left;
+  }
+  footer .wrap{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer .close-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-faint);
+  }
+  footer .contact-row{ margin: 0; }
+
+  @media (max-width: 640px){
+    h1{ font-size: 38px; }
+    .topbar nav{ display:none; }
+    .ticket-top{ flex-direction: column; align-items:flex-start; }
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="id"><b>SOC://</b>harsh-ahuja</div>
+    <nav>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#skills">skills</a>
+      <a href="#certifications">certs</a>
+      <a href="#education">education</a>
+      <a href="#involvement">involvement</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="hero" style="border-bottom:1px solid var(--border-soft); padding-bottom:48px;">
+    <div class="status-row">
+      <span class="pulse-dot"></span>
+      STATUS · M.Sc. DFIS STUDENT, NFSU
+    </div>
+    <h1>Harsh Ahuja</h1>
+    <p class="role-line">CompTIA Security+ Certified · Digital Forensics · SOC1<br><span>Bengaluru, Karnataka, India</span></p>
+    <p class="hero-summary">
+      CompTIA Security+ certified, now pursuing an MSc in Digital Forensics and Information
+      Security at NFSU. Previously worked in SysOps at Kyndryl, managing infrastructure and
+      supporting secure, reliable systems. Blends a BCA in Cloud Technology &amp; Information
+      Security from Jain University with hands-on SOC experience — particularly interested in
+      cybersecurity operations, automation, and digital rights, and working towards a long-term
+      career in security engineering.
+    </p>
+    <div class="contact-row">
+      <a href="mailto:harshahuja320@gmail.com">harshahuja320@gmail.com</a>
+      <span>+91 8958080555</span>
+      <span>Bangalore, India</span>
+      <a href="https://www.linkedin.com/in/harsh-ahuja-87a47b1aa/" target="_blank" rel="noopener">linkedin.com/in/harsh-ahuja</a>
+      <a href="https://github.com/sebby-049" target="_blank" rel="noopener">github.com/sebby-049</a>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="section-head">
+      <h2>Experience</h2>
+      <span class="count">2 records</span>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">INC-002 · SYSTEM OPERATIONS</span>
+        <span class="badge closed">CLOSED</span>
+      </div>
+      <h3>System Operations Specialist</h3>
+      <div class="org">Kyndryl India, Greater Bengaluru Area — Client: AMEX · Hybrid</div>
+      <div class="dates">June 2025 – July 2026</div>
+      <ul>
+        <li>Monitor enterprise environments using Dynatrace and Splunk dashboards to ensure system health, availability, and performance</li>
+        <li>Perform batch and console operations, validating successful execution of scheduled jobs</li>
+        <li>Detect, analyze, and escalate operational and security-related anomalies following SOPs</li>
+        <li>Create, manage, and resolve incidents using ServiceNow as the primary ticketing tool</li>
+        <li>Work extensively with mainframe systems, gaining hands-on experience in enterprise operations</li>
+        <li>Collaborate with cross-functional teams in a fast-paced, 24/7 corporate environment</li>
+      </ul>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">INC-001 · CYBERSECURITY INTERN</span>
+        <span class="badge closed">CLOSED</span>
+      </div>
+      <h3>Cybersecurity Intern</h3>
+      <div class="org">Pinnacle Labs</div>
+      <div class="dates">June 2024 – July 2024</div>
+      <ul>
+        <li>Conducted security testing and monitoring activities in controlled lab environments</li>
+        <li>Used penetration testing tools to understand attack vectors and system weaknesses</li>
+        <li>Maintained detailed documentation of findings and remediation steps</li>
+        <li>Strengthened understanding of malware behavior, system logging, and defensive controls</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head">
+      <h2>Projects</h2>
+      <span class="count">3 case files</span>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">CASE-001 · HOME LAB</span>
+        <span class="badge complete">RESOLVED</span>
+      </div>
+      <h3>Azure SIEM Home Lab</h3>
+      <div class="org">Azure Sentinel</div>
+      <ul>
+        <li>Implemented Azure Sentinel SIEM; deployed a Windows VM with open RDP to simulate attacks and analyze malicious traffic</li>
+        <li>Created alerts, dashboards, and incident workflows to understand SOC investigation processes</li>
+      </ul>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">CASE-002 · RESEARCH</span>
+        <span class="badge complete">RESOLVED</span>
+      </div>
+      <h3>Zero Trust Architecture &amp; UAVs</h3>
+      <div class="org">Security Research Paper</div>
+      <ul>
+        <li>Researched ZTA implementation for UAV systems, focusing on secure communication, frequency channels, and network segmentation</li>
+      </ul>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">CASE-003 · GAME DEV</span>
+        <span class="badge complete">RESOLVED</span>
+      </div>
+      <h3>Indie Game Dev in Unity</h3>
+      <div class="org">Personal project — March 2024</div>
+      <ul>
+        <li>Built a small platformer and a barebones FPS in Unity, learning asset handling, maps, 3D geometry, sculpting, and physics</li>
+        <li>Assembled a Mario-inspired platformer largely from Unity's own assets while learning the engine's design workflow</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-head">
+      <h2>Skills</h2>
+    </div>
+
+    <div class="skill-group">
+      <h4>Security operations &amp; SOC</h4>
+      <div class="tag-row">
+        <span class="tag">SIEM monitoring &amp; alert analysis</span>
+        <span class="tag">Splunk</span>
+        <span class="tag">Azure Sentinel</span>
+        <span class="tag">Incident detection &amp; response</span>
+        <span class="tag">Log analysis</span>
+        <span class="tag">Cyber forensics</span>
+        <span class="tag">Cryptography &amp; hashing</span>
+        <span class="tag">SQL</span>
+        <span class="tag">SPL (Splunk)</span>
+        <span class="tag">KQL (Sentinel)</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Digital forensics toolkit</h4>
+      <div class="tag-row">
+        <span class="tag">Autopsy</span>
+        <span class="tag">FTK Imager</span>
+        <span class="tag">Registry Explorer</span>
+        <span class="tag">Volatility Workbench</span>
+        <span class="tag">Sysinternals Suite</span>
+        <span class="tag">ImHex</span>
+        <span class="tag">VMware Workstation Pro</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Cloud security</h4>
+      <div class="tag-row">
+        <span class="tag">AWS security</span>
+        <span class="tag">Azure security</span>
+        <span class="tag">GCP security</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Scripting &amp; automation</h4>
+      <div class="tag-row">
+        <span class="tag">Python</span>
+        <span class="tag">Bash</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Frameworks &amp; standards</h4>
+      <div class="tag-row">
+        <span class="tag">MITRE ATT&amp;CK</span>
+        <span class="tag">NIST</span>
+        <span class="tag">ISO 27001</span>
+        <span class="tag">OWASP</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Networking &amp; operating systems</h4>
+      <div class="tag-row">
+        <span class="tag">TCP/IP</span>
+        <span class="tag">DNS</span>
+        <span class="tag">DHCP</span>
+        <span class="tag">VPNs</span>
+        <span class="tag">Packet analysis</span>
+        <span class="tag">Windows</span>
+        <span class="tag">Linux</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Enterprise monitoring &amp; platforms</h4>
+      <div class="tag-row">
+        <span class="tag">Dynatrace</span>
+        <span class="tag">Splunk</span>
+        <span class="tag">ServiceNow</span>
+        <span class="tag">Mainframe systems &amp; dashboards</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Security &amp; administration tools</h4>
+      <div class="tag-row">
+        <span class="tag">Wireshark</span>
+        <span class="tag">tcpdump</span>
+        <span class="tag">Nmap</span>
+        <span class="tag">Metasploit</span>
+        <span class="tag">Active Directory</span>
+        <span class="tag">PowerShell</span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <h4>Languages</h4>
+      <div class="tag-row">
+        <span class="tag">English — Native/Bilingual</span>
+        <span class="tag">Hindi — Native/Bilingual</span>
+        <span class="tag">German — Elementary</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="certifications">
+    <div class="section-head">
+      <h2>Certifications</h2>
+      <span class="count">3 records</span>
+    </div>
+    <div class="log">
+      <div class="log-row"><span class="cert-name">CompTIA Security+</span><span class="cert-year mono">2025</span></div>
+      <div class="log-row"><span class="cert-name">Google Cybersecurity Professional Certificate — Coursera</span><span class="cert-year mono">2025</span></div>
+      <div class="log-row"><span class="cert-name">Computer Forensics — Infosec</span><span class="cert-year mono">2025</span></div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="section-head">
+      <h2>Education</h2>
+    </div>
+    <div class="edu" style="margin-bottom:16px;">
+      <div class="ticket-top" style="margin-bottom:8px;">
+        <span class="ticket-id mono">EDU-002 · MSc</span>
+        <span class="badge active">ACTIVE</span>
+      </div>
+      <h3>Master of Science, Digital Forensics and Information Security</h3>
+      <div class="school">National Forensic Sciences University (NFSU), Goa</div>
+      <div class="years">Started August 2026</div>
+    </div>
+    <div class="edu">
+      <div class="ticket-top" style="margin-bottom:8px;">
+        <span class="ticket-id mono">EDU-001 · BCA</span>
+        <span class="badge closed">CLOSED</span>
+      </div>
+      <h3>Bachelor of Computer Application — CTIS (Cloud Technology &amp; Information Security)</h3>
+      <div class="school">Jain (Deemed to be University), Computer Science</div>
+      <div class="years">September 2022 – April 2025</div>
+    </div>
+  </section>
+
+  <section id="involvement">
+    <div class="section-head">
+      <h2>Campus Involvement</h2>
+      <span class="count">3 records</span>
+    </div>
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">ORG-000 · PLACEMENT COMMITTEE</span>
+        <span class="badge active">ACTIVE</span>
+      </div>
+      <h3>Placement Committee Member</h3>
+      <div class="org">National Forensic Sciences University (NFSU), Goa</div>
+      <div class="dates">August 2026 – Present</div>
+    </div>
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">ORG-001 · LITERARY FORUM</span>
+        <span class="badge closed">CLOSED</span>
+      </div>
+      <h3>Member, Artography</h3>
+      <div class="org">Samashti — The Student Council</div>
+      <div class="dates">October 2024 – May 2025</div>
+    </div>
+    <div class="ticket">
+      <div class="ticket-top">
+        <span class="ticket-id mono">ORG-002 · GAMING &amp; IT FORUM</span>
+        <span class="badge closed">CLOSED</span>
+      </div>
+      <h3>Member, Crackillusion</h3>
+      <div class="org">Samashti — The Student Council, Bengaluru</div>
+      <div class="dates">August 2022 – May 2025</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="close-line">END OF RECORD</span>
+    <div class="contact-row">
+      <a href="mailto:harshahuja320@gmail.com">harshahuja320@gmail.com</a>
+      <span>+91 8958080555</span>
+      <a href="https://www.linkedin.com/in/harsh-ahuja-87a47b1aa/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/sebby-049" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
