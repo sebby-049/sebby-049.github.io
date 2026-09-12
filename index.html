@@ -3,24 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harsh Ahuja — Cybersecurity Analyst</title>
+<title>root@harsh-ahuja:~$ whoami</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #0B0F14;
-    --panel: #121822;
-    --panel-alt: #161D29;
-    --border: #232B38;
-    --border-soft: #1A212C;
-    --text: #DCE3EA;
-    --text-dim: #8B96A5;
-    --text-faint: #566072;
-    --amber: #E8A33D;
-    --amber-dim: #8A6427;
-    --blue: #5B9DD9;
-    --green: #5FBF7A;
-    --grey-status: #6B7684;
+    --bg: #020402;
+    --panel: #060B06;
+    --border: #143014;
+    --border-soft: #0D1F0D;
+    --text: #3EFF3E;
+    --text-bright: #B6FFB6;
+    --text-dim: #1FA31F;
+    --text-faint: #0E5C0E;
+    --amber: #FFD23F;
+    --red: #FF4444;
+    --cursor-blink: #3EFF3E;
   }
 
   *{ box-sizing: border-box; }
@@ -28,647 +26,671 @@
   body{
     margin:0;
     background: var(--bg);
-    background-image:
-      radial-gradient(circle at 15% 0%, rgba(91,157,217,0.06), transparent 40%),
-      radial-gradient(circle at 85% 20%, rgba(232,163,61,0.05), transparent 45%);
     color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    line-height: 1.6;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14.5px;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
-  a{ color: var(--blue); }
-  ::selection{ background: var(--amber-dim); color: #fff; }
+  a{ color: var(--text-bright); text-decoration: none; border-bottom: 1px dashed var(--text-dim); }
+  a:hover{ color: var(--amber); border-color: var(--amber); }
+  ::selection{ background: var(--text-dim); color: #000; }
 
-  .wrap{
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 0 24px;
+  /* ---------- matrix rain background ---------- */
+  #matrix{
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.16;
+    pointer-events: none;
   }
 
-  .mono{ font-family: 'IBM Plex Mono', monospace; }
+  /* ---------- scanlines / CRT ---------- */
+  #crt{
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.15) 0px,
+      rgba(0,0,0,0.15) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+  }
+  #crt::after{
+    content:'';
+    position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.45) 100%);
+  }
+  @keyframes flicker{
+    0%, 100%{ opacity: 1; }
+    50%{ opacity: 0.985; }
+  }
+  body{ animation: flicker 6s infinite; }
+  @media (prefers-reduced-motion: reduce){
+    body{ animation: none; }
+  }
 
-  /* ---------- top bar ---------- */
+  /* ---------- scroll progress ---------- */
+  #scroll-progress{
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--text);
+    box-shadow: 0 0 8px var(--text);
+    z-index: 30;
+    transition: width 0.1s linear;
+  }
+
+  .wrap{ position: relative; z-index: 2; max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ---------- top nav ---------- */
   .topbar{
-    border-bottom: 1px solid var(--border-soft);
-    padding: 18px 0;
     position: sticky;
     top: 0;
-    background: rgba(11,15,20,0.92);
-    backdrop-filter: blur(6px);
-    z-index: 10;
-  }
-  .topbar .wrap{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .topbar .id{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--text-dim);
-    letter-spacing: 0.02em;
-  }
-  .topbar .id b{ color: var(--amber); font-weight: 500; }
-  .topbar nav{ display:flex; gap: 22px; }
-  .topbar nav a{
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 13.5px;
-    font-family: 'IBM Plex Mono', monospace;
-    transition: color 0.15s;
-  }
-  .topbar nav a:hover{ color: var(--text); }
-
-  /* ---------- hero ---------- */
-  .hero{
-    padding: 64px 0 48px;
+    z-index: 20;
+    background: rgba(2,4,2,0.9);
     border-bottom: 1px solid var(--border-soft);
+    backdrop-filter: blur(4px);
   }
-  .status-row{
+  .topbar-inner{
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 12.5px;
+  }
+  .topbar .prompt-label{ color: var(--text-dim); }
+  .topbar nav{ display:flex; gap: 14px; flex-wrap: wrap; }
+  .topbar nav a{ border: none; color: var(--text-dim); }
+  .topbar nav a:hover{ color: var(--text-bright); }
+  .topbar nav a::before{ content: './'; color: var(--text-faint); }
+
+  /* ---------- terminal window chrome ---------- */
+  .term-window{
+    margin-top: 28px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--panel);
+    box-shadow: 0 0 0 1px rgba(62,255,62,0.05), 0 20px 60px -20px rgba(0,0,0,0.8);
+  }
+  .term-titlebar{
     display:flex;
     align-items:center;
-    gap: 10px;
-    margin-bottom: 22px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--green);
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-soft);
   }
-  .pulse-dot{
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 0 0 rgba(95,191,122,0.6);
-    animation: pulse 2.2s infinite;
-  }
-  @keyframes pulse{
-    0%{ box-shadow: 0 0 0 0 rgba(95,191,122,0.45); }
-    70%{ box-shadow: 0 0 0 8px rgba(95,191,122,0); }
-    100%{ box-shadow: 0 0 0 0 rgba(95,191,122,0); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .pulse-dot{ animation: none; }
-  }
-
-  h1{
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 52px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    margin: 0 0 6px;
-    line-height: 1.05;
-  }
-  .role-line{
-    font-size: 18px;
-    color: var(--text-dim);
-    margin: 0 0 28px;
-  }
-  .role-line span{ color: var(--text); }
-
-  .hero-summary{
-    max-width: 640px;
-    font-size: 15.5px;
-    color: var(--text-dim);
-    border-left: 2px solid var(--amber-dim);
-    padding-left: 16px;
-    margin-bottom: 30px;
-  }
-
-  .contact-row{
-    display:flex;
-    flex-wrap: wrap;
-    gap: 10px 28px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-  }
-  .contact-row a, .contact-row span{
-    color: var(--text-dim);
-    text-decoration: none;
-  }
-  .contact-row a:hover{ color: var(--amber); }
-
-  /* ---------- section shell ---------- */
-  section{ padding: 52px 0; border-bottom: 1px solid var(--border-soft); }
-  section:last-of-type{ border-bottom: none; }
-  .section-head{
-    display:flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 28px;
-  }
-  .section-head h2{
-    font-family:'Space Grotesk', sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    margin: 0;
-  }
-  .section-head .count{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12.5px;
+  .term-dot{ width:10px; height:10px; border-radius:50%; background: var(--border); }
+  .term-titlebar .name{
+    margin-left: 10px;
     color: var(--text-faint);
-  }
-
-  /* ---------- experience / project cards (ticket style) ---------- */
-  .ticket{
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 22px 24px;
-    margin-bottom: 16px;
-  }
-  .ticket-top{
-    display:flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-  }
-  .ticket-id{
-    font-family:'IBM Plex Mono', monospace;
     font-size: 12px;
-    color: var(--text-faint);
   }
-  .badge{
-    font-family:'IBM Plex Mono', monospace;
+  .term-body{ padding: 22px 24px 8px; }
+
+  /* ---------- prompt / command blocks ---------- */
+  .cmd-block{
+    margin-bottom: 34px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    scroll-margin-top: 84px;
+  }
+  .cmd-block.visible{ opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .cmd-block{ opacity:1; transform:none; transition:none; }
+  }
+  .prompt-line{
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-size: 13.5px;
+  }
+  .prompt-line .user{ color: var(--amber); }
+  .prompt-line .path{ color: var(--text-bright); }
+  .prompt-line .cmd{ color: var(--text); }
+  .out{ padding-left: 4px; color: var(--text); }
+  .out .hl{ color: var(--text-bright); }
+  .out p{ margin: 0 0 10px; }
+
+  .section-banner{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    margin-bottom: 16px;
+    color: var(--text-bright);
+  }
+  .section-banner .num{
     font-size: 11px;
-    padding: 3px 9px;
+    color: var(--bg);
+    background: var(--text-dim);
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-weight: 600;
+  }
+  .section-banner .label{
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  .section-banner .rule{
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* status tags */
+  .tag-status{
+    display:inline-block;
+    font-size: 11px;
+    padding: 1px 7px;
     border-radius: 3px;
     border: 1px solid;
-    white-space: nowrap;
+    margin-left: 8px;
+    vertical-align: middle;
   }
-  .badge.active{ color: var(--green); border-color: rgba(95,191,122,0.35); background: rgba(95,191,122,0.07); }
-  .badge.closed{ color: var(--grey-status); border-color: rgba(107,118,132,0.35); background: rgba(107,118,132,0.06); }
-  .badge.complete{ color: var(--blue); border-color: rgba(91,157,217,0.35); background: rgba(91,157,217,0.07); }
+  .tag-status.active{ color: var(--text-bright); border-color: var(--text); background: rgba(62,255,62,0.08); animation: tag-glow 2.4s ease-in-out infinite; }
+  .tag-status.closed{ color: var(--text-faint); border-color: var(--border); }
+  .tag-status.resolved{ color: var(--amber); border-color: rgba(255,210,63,0.4); background: rgba(255,210,63,0.06); }
+  @keyframes tag-glow{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(62,255,62,0); }
+    50%{ box-shadow: 0 0 8px 0 rgba(62,255,62,0.5); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tag-status.active{ animation: none; }
+  }
 
-  .ticket h3{
-    font-family:'Space Grotesk', sans-serif;
-    font-size: 19px;
-    font-weight: 600;
-    margin: 4px 0 2px;
-  }
-  .ticket .org{
-    color: var(--amber);
-    font-size: 14px;
+  .entry{ margin-bottom: 20px; padding-left: 14px; border-left: 2px solid var(--border-soft); }
+  .entry:last-child{ margin-bottom: 0; }
+  .entry-head{ color: var(--text-bright); font-weight: 600; margin-bottom: 2px; }
+  .entry-org{ color: var(--text-dim); font-size: 13px; margin-bottom: 2px; }
+  .entry-dates{ color: var(--text-faint); font-size: 12px; margin-bottom: 8px; }
+  .entry ul{ margin: 0; padding-left: 18px; }
+  .entry li{ margin-bottom: 5px; color: var(--text); }
+  .entry li::marker{ content: "> "; color: var(--text-faint); }
+
+  /* ---------- ls-style project rows ---------- */
+  .ls-row{
+    display:flex;
+    gap: 14px;
+    align-items:baseline;
+    flex-wrap: wrap;
+    color: var(--text-dim);
+    font-size: 13px;
     margin-bottom: 2px;
   }
-  .ticket .dates{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text-faint);
-    margin-bottom: 14px;
-  }
-  .ticket ul{
-    margin: 0;
-    padding-left: 18px;
-    color: var(--text-dim);
-    font-size: 14.5px;
-  }
-  .ticket li{ margin-bottom: 6px; }
-  .ticket li::marker{ color: var(--text-faint); }
+  .ls-row .perm{ color: var(--text-faint); width: 100px; flex-shrink:0; }
+  .ls-row .fname{ color: var(--text-bright); }
 
-  /* ---------- skills ---------- */
-  .skill-group{
-    margin-bottom: 20px;
-  }
-  .skill-group h4{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text-faint);
-    font-weight: 500;
-    margin: 0 0 10px;
-  }
-  .tag-row{ display:flex; flex-wrap: wrap; gap: 8px; }
-  .tag{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text);
-    background: var(--panel-alt);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 5px 10px;
-  }
+  /* ---------- key: value grep-style lines ---------- */
+  .kv{ margin-bottom: 4px; }
+  .kv .k{ color: var(--text-faint); }
+  .kv .v{ color: var(--text-bright); }
 
-  /* ---------- certifications (log list) ---------- */
-  .log{
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--panel);
-    overflow: hidden;
-  }
-  .log-row{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 13px 20px;
-    border-bottom: 1px solid var(--border-soft);
-    font-size: 14.5px;
-    gap: 16px;
-  }
-  .log-row:last-child{ border-bottom: none; }
-  .log-row .cert-name{ color: var(--text); }
-  .log-row .cert-year{
-    font-family:'IBM Plex Mono', monospace;
+  /* ---------- tag pills for skills ---------- */
+  .pill-row{ display:flex; flex-wrap:wrap; gap: 6px; margin-bottom: 14px; }
+  .pill{
     font-size: 12px;
-    color: var(--text-faint);
-    white-space: nowrap;
-  }
-
-  /* ---------- education ---------- */
-  .edu{
-    background: var(--panel);
+    color: var(--text-dim);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 20px 24px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.15s;
   }
-  .edu h3{
-    font-family:'Space Grotesk', sans-serif;
-    font-size: 17px;
-    margin: 0 0 4px;
-  }
-  .edu .school{ color: var(--amber); font-size: 14px; margin-bottom: 2px; }
-  .edu .years{ font-family:'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--text-faint); }
+  .pill:hover{ color: var(--text-bright); border-color: var(--text); background: rgba(62,255,62,0.06); transform: translateY(-2px); }
+  .pill-group-label{ color: var(--text-faint); font-size: 12px; margin: 14px 0 6px; }
+  .pill-group-label:first-child{ margin-top: 0; }
 
-  /* ---------- footer ---------- */
+  /* ---------- cursor ---------- */
+  .cursor{
+    display:inline-block;
+    width: 8px; height: 15px;
+    background: var(--cursor-blink);
+    vertical-align: middle;
+    animation: blink 1s steps(1) infinite;
+    box-shadow: 0 0 6px var(--cursor-blink);
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+  @media (prefers-reduced-motion: reduce){
+    .cursor{ animation: none; }
+  }
+
   footer{
-    padding: 44px 0 60px;
-    text-align: left;
-  }
-  footer .wrap{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  footer .close-line{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12.5px;
+    padding: 40px 0 20px;
     color: var(--text-faint);
+    font-size: 12.5px;
   }
-  footer .contact-row{ margin: 0; }
+
+  /* ---------- side panels (wide screens only) ---------- */
+  .side-panel{
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 220px;
+    display: none;
+    font-size: 11.5px;
+    color: var(--text-faint);
+    z-index: 3;
+  }
+  #panel-left{ left: calc(50% - 430px - 250px); }
+  #panel-right{ right: calc(50% - 430px - 250px); }
+  @media (min-width: 1480px){
+    .side-panel{ display: block; }
+  }
+  .panel-box{
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 16px 18px;
+    background: rgba(11,6,6,0.4);
+  }
+  .panel-box + .panel-box{ margin-top: 16px; }
+  .panel-title{
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .ascii-art{
+    color: var(--text-dim);
+    white-space: pre;
+    font-size: 10px;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .fetch-line{ margin-bottom: 4px; }
+  .fetch-line .k{ color: var(--text-dim); }
+  .fetch-line .v{ color: var(--text-bright); }
+  .swatches{ display:flex; gap:4px; margin-top: 10px; }
+  .swatches span{ width:14px; height:14px; border-radius:2px; }
+
+  .quick-link{
+    display:block;
+    border: none;
+    color: var(--text-faint);
+    padding: 6px 0;
+    font-size: 11.5px;
+    line-height: 1.5;
+    transition: color 0.2s;
+  }
+  a.quick-link:hover{ color: var(--text-bright); }
+  .quick-link .qk{ color: var(--text-dim); margin-right: 6px; }
+  .quick-link .qv{ color: var(--text-bright); word-break: break-word; }
+  a.quick-link:hover .qk{ color: var(--text); }
+
+  #clock{ color: var(--text-bright); font-size: 15px; margin-bottom: 4px; }
+  #uptime{ color: var(--text-faint); font-size: 11px; }
 
   @media (max-width: 640px){
-    h1{ font-size: 38px; }
-    .topbar nav{ display:none; }
-    .ticket-top{ flex-direction: column; align-items:flex-start; }
+    .topbar nav{ display: none; }
+    .ls-row .perm{ display:none; }
   }
 
-  a:focus-visible, button:focus-visible{
-    outline: 2px solid var(--amber);
-    outline-offset: 2px;
-  }
+  a:focus-visible{ outline: 1px solid var(--amber); outline-offset: 2px; }
 </style>
 </head>
 <body>
 
+<div id="scroll-progress"></div>
+<canvas id="matrix"></canvas>
+<div id="crt"></div>
+
+<aside class="side-panel" id="panel-left">
+  <div class="panel-box">
+    <div class="panel-title">// timeline.log</div>
+    <div class="fetch-line"><span class="k">[2019–20]</span> <span class="v">Indie game dev in Unity</span></div>
+    <div class="fetch-line"><span class="k">[2022]</span> <span class="v">Started B.C.A. — Jain University</span></div>
+    <div class="fetch-line"><span class="k">[2023]</span> <span class="v">ZTA &amp; UAV research paper (authored)</span></div>
+    <div class="fetch-line"><span class="k">[2024]</span> <span class="v">Azure SIEM Home Lab</span></div>
+    <div class="fetch-line"><span class="k">[2024]</span> <span class="v">Cybersecurity Intern — Pinnacle Labs</span></div>
+    <div class="fetch-line"><span class="k">[2025]</span> <span class="v">CompTIA Security+ certified</span></div>
+    <div class="fetch-line"><span class="k">[2025]</span> <span class="v">Joined Kyndryl — SysOps (AMEX)</span></div>
+    <div class="fetch-line"><span class="k">[2026]</span> <span class="v">ICS/OT CTF — Null/OWASP Bangalore</span></div>
+    <div class="fetch-line"><span class="k">[2026]</span> <span class="v">Started M.Sc. DFIS — NFSU Goa</span></div>
+  </div>
+</aside>
+
+<aside class="side-panel" id="panel-right">
+  <div class="panel-box">
+    <div id="clock">00:00:00</div>
+    <div id="uptime">uptime: --</div>
+  </div>
+</aside>
+
 <div class="topbar">
-  <div class="wrap">
-    <div class="id"><b>SOC://</b>harsh-ahuja</div>
+  <div class="topbar-inner">
+    <span class="prompt-label">root@harsh-ahuja:~$</span>
     <nav>
+      <a href="#whoami">whoami</a>
       <a href="#experience">experience</a>
       <a href="#projects">projects</a>
       <a href="#skills">skills</a>
-      <a href="#certifications">certs</a>
+      <a href="#certs">certs</a>
       <a href="#education">education</a>
-      <a href="#involvement">involvement</a>
+      <a href="#contact">contact</a>
     </nav>
   </div>
 </div>
 
 <div class="wrap">
-
-  <section class="hero" style="border-bottom:1px solid var(--border-soft); padding-bottom:48px;">
-    <div class="status-row">
-      <span class="pulse-dot"></span>
-      STATUS · M.Sc. DFIS STUDENT, NFSU
+  <div class="term-window">
+    <div class="term-titlebar">
+      <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+      <span class="name">root@harsh-ahuja: ~/portfolio — 92x40</span>
     </div>
-    <h1>Harsh Ahuja</h1>
-    <p class="role-line">CompTIA Security+ Certified · Digital Forensics · SOC1<br><span>NFSU Goa</span></p>
-    <p class="hero-summary">
-      CompTIA Security+ certified, now pursuing an MSc in Digital Forensics and Information
-      Security at NFSU. Previously worked in SysOps at Kyndryl, managing infrastructure and
-      supporting secure, reliable systems. Blends a BCA in Cloud Technology &amp; Information
-      Security from Jain University with hands-on SOC experience — particularly interested in
-      cybersecurity operations, automation, and digital rights, and working towards a long-term
-      career in security engineering.
-    </p>
-    <div class="contact-row">
-      <a href="mailto:harshahuja320@gmail.com">harshahuja320@gmail.com</a>
-      <span>+91 8958080555</span>
-      <span>NFSU Goa</span>
-      <a href="https://www.linkedin.com/in/harsh-ahuja-87a47b1aa/" target="_blank" rel="noopener">linkedin.com/in/harsh-ahuja</a>
-      <a href="https://github.com/sebby-049" target="_blank" rel="noopener">github.com/sebby-049</a>
-      <span>Discord: sebbyactual</span>
-    </div>
-  </section>
+    <div class="term-body">
 
-  <section id="experience">
-    <div class="section-head">
-      <h2>Experience</h2>
-      <span class="count">2 records</span>
-    </div>
-
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">INC-002 · SYSTEM OPERATIONS</span>
-        <span class="badge closed">CLOSED</span>
+      <div class="cmd-block" id="whoami">
+        <div class="section-banner"><span class="num">01</span><span class="label">IDENTITY</span><span class="rule"></span></div>
+        <div class="prompt-line"><span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cmd">whoami</span></div>
+        <div class="out">
+          <p class="hl" style="font-size:16px; margin-bottom:6px;">Harsh Ahuja</p>
+          <p>CompTIA Security+ Certified · Digital Forensics · SOC1</p>
+          <p>Status: <span class="hl">M.Sc. DFIS Student, NFSU Goa</span></p>
+          <p style="margin-top:12px;">CompTIA Security+ certified, now pursuing an MSc in Digital Forensics and
+          Information Security at NFSU. Previously worked in SysOps at Kyndryl, managing infrastructure and
+          supporting secure, reliable systems. Blends a BCA in Cloud Technology &amp; Information Security from
+          Jain University with hands-on SOC experience — particularly interested in cybersecurity operations,
+          automation, and digital rights, and working towards a long-term career in security engineering.</p>
+        </div>
       </div>
-      <h3>System Operations Specialist</h3>
-      <div class="org">Kyndryl India, Greater Bengaluru Area — Client: AMEX · Hybrid</div>
-      <div class="dates">June 2025 – July 2026</div>
-      <ul>
-        <li>Monitor enterprise environments using Dynatrace and Splunk dashboards to ensure system health, availability, and performance</li>
-        <li>Perform batch and console operations, validating successful execution of scheduled jobs</li>
-        <li>Detect, analyze, and escalate operational and security-related anomalies following SOPs</li>
-        <li>Create, manage, and resolve incidents using ServiceNow as the primary ticketing tool</li>
-        <li>Work extensively with mainframe systems, gaining hands-on experience in enterprise operations</li>
-        <li>Collaborate with cross-functional teams in a fast-paced, 24/7 corporate environment</li>
-      </ul>
-    </div>
 
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">INC-001 · CYBERSECURITY INTERN</span>
-        <span class="badge closed">CLOSED</span>
+      <div class="cmd-block" id="experience">
+        <div class="section-banner"><span class="num">02</span><span class="label">EXPERIENCE</span><span class="rule"></span></div>
+        <div class="prompt-line"><span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cmd">cat experience.log</span></div>
+        <div class="out">
+          <div class="entry">
+            <div class="entry-head">System Operations Specialist <span class="tag-status closed">CLOSED</span></div>
+            <div class="entry-org">Kyndryl India, Greater Bengaluru Area — Client: AMEX · Hybrid</div>
+            <div class="entry-dates">June 2025 – July 2026</div>
+            <ul>
+              <li>Monitored enterprise environments using Dynatrace and Splunk dashboards to ensure system health, availability, and performance</li>
+              <li>Performed batch and console operations, validating successful execution of scheduled jobs</li>
+              <li>Detected, analyzed, and escalated operational and security-related anomalies following SOPs</li>
+              <li>Created, managed, and resolved incidents using ServiceNow as the primary ticketing tool</li>
+              <li>Worked extensively with mainframe systems, gaining hands-on experience in enterprise operations</li>
+              <li>Collaborated with cross-functional teams in a fast-paced, 24/7 corporate environment</li>
+            </ul>
+          </div>
+          <div class="entry">
+            <div class="entry-head">Cybersecurity Intern <span class="tag-status closed">CLOSED</span></div>
+            <div class="entry-org">Pinnacle Labs</div>
+            <div class="entry-dates">June 2024 – July 2024</div>
+            <ul>
+              <li>Conducted security testing and monitoring activities in controlled lab environments</li>
+              <li>Used penetration testing tools to understand attack vectors and system weaknesses</li>
+              <li>Maintained detailed documentation of findings and remediation steps</li>
+              <li>Strengthened understanding of malware behavior, system logging, and defensive controls</li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <h3>Cybersecurity Intern</h3>
-      <div class="org">Pinnacle Labs</div>
-      <div class="dates">June 2024 – July 2024</div>
-      <ul>
-        <li>Conducted security testing and monitoring activities in controlled lab environments</li>
-        <li>Used penetration testing tools to understand attack vectors and system weaknesses</li>
-        <li>Maintained detailed documentation of findings and remediation steps</li>
-        <li>Strengthened understanding of malware behavior, system logging, and defensive controls</li>
-      </ul>
-    </div>
-  </section>
 
-  <section id="projects">
-    <div class="section-head">
-      <h2>Projects</h2>
-      <span class="count">4 case files</span>
-    </div>
+      <div class="cmd-block" id="projects">
+        <div class="section-banner"><span class="num">03</span><span class="label">PROJECTS</span><span class="rule"></span></div>
+        <div class="prompt-line"><span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cmd">ls -la projects/</span></div>
+        <div class="out">
+          <div class="ls-row"><span class="perm">-rw-r--r--</span><span class="fname">ics-ot-ctf.md</span><span class="tag-status resolved">RESOLVED</span></div>
+          <div class="entry">
+            <div class="entry-head">ICS/OT Hacking Challenge — Null/OWASP Bangalore</div>
+            <div class="entry-org">Null Bangalore &amp; OWASP Bangalore Meetup, Amazon Development Center</div>
+            <div class="entry-dates">March 2026</div>
+            <ul>
+              <li>Chained an unauthenticated RCE in a simulated WayneTech ICS dashboard (Flask) to full root access on the central-monitoring container</li>
+              <li>Exploited missing sequence-number validation in IEC 61850 GOOSE substation messaging to replay a captured TRIP frame, de-energizing a simulated power grid zone</li>
+              <li>Ran recon, packet crafting, and credential testing with nmap, gobuster, ffuf, Burp Suite, Scapy, pyModbus, Wireshark/tcpdump, sqlmap, and hydra</li>
+            </ul>
+          </div>
 
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">CASE-001 · ICS/OT CTF</span>
-        <span class="badge complete">RESOLVED</span>
+          <div class="ls-row" style="margin-top:18px;"><span class="perm">-rw-r--r--</span><span class="fname">azure-siem-lab.md</span><span class="tag-status resolved">RESOLVED</span></div>
+          <div class="entry">
+            <div class="entry-head">Azure SIEM Home Lab</div>
+            <div class="entry-org">Azure Sentinel</div>
+            <div class="entry-dates">2024</div>
+            <ul>
+              <li>Implemented Azure Sentinel SIEM; deployed a Windows VM with open RDP to simulate attacks and analyze malicious traffic</li>
+              <li>Created alerts, dashboards, and incident workflows to understand SOC investigation processes</li>
+            </ul>
+          </div>
+
+          <div class="ls-row" style="margin-top:18px;"><span class="perm">-rw-r--r--</span><span class="fname">zta-uav-research.pdf</span><span class="tag-status resolved">RESOLVED</span></div>
+          <div class="entry">
+            <div class="entry-head">Zero Trust Architecture &amp; UAVs</div>
+            <div class="entry-org">Research Paper</div>
+            <div class="entry-dates">2023 – 2024</div>
+            <ul>
+              <li>Authored a research paper on enhancing UAV cybersecurity with Zero Trust Architecture and secure communication techniques</li>
+              <li>Proposed a framework combining network segmentation, passkey-based authentication, and Frequency Hopping Spread Spectrum (FHSS) to reduce jamming, interception, and unauthorized access</li>
+            </ul>
+          </div>
+
+          <div class="ls-row" style="margin-top:18px;"><span class="perm">drwxr-xr-x</span><span class="fname">unity-indie-game/</span><span class="tag-status resolved">RESOLVED</span></div>
+          <div class="entry">
+            <div class="entry-head">Indie Game Dev in Unity</div>
+            <div class="entry-org">Personal project — High School (2019–2020)</div>
+            <ul>
+              <li>Built a small platformer and a barebones FPS in Unity, learning asset handling, maps, 3D geometry, sculpting, and physics</li>
+              <li>Assembled a Mario-inspired platformer largely from Unity's own assets while learning the engine's design workflow</li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <h3>ICS/OT Hacking Challenge — Null/OWASP Bangalore</h3>
-      <div class="org">Null Bangalore &amp; OWASP Bangalore Meetup, Amazon Development Center</div>
-      <div class="dates">March 2026</div>
-      <ul>
-        <li>Chained an unauthenticated RCE in a simulated WayneTech ICS dashboard (Flask) to full root access on the central-monitoring container</li>
-        <li>Exploited missing sequence-number validation in IEC 61850 GOOSE substation messaging to replay a captured TRIP frame, de-energizing a simulated power grid zone</li>
-        <li>Ran recon, packet crafting, and credential testing with nmap, gobuster, ffuf, Burp Suite, Scapy, pyModbus, Wireshark/tcpdump, sqlmap, and hydra</li>
-      </ul>
-    </div>
 
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">CASE-002 · HOME LAB</span>
-        <span class="badge complete">RESOLVED</span>
+      <div class="cmd-block" id="skills">
+        <div class="section-banner"><span class="num">04</span><span class="label">SKILLS</span><span class="rule"></span></div>
+        <div class="prompt-line"><span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cmd">cat skills.json | jq</span></div>
+        <div class="out">
+          <div class="pill-group-label">security_operations_soc:</div>
+          <div class="pill-row">
+            <span class="pill">SIEM monitoring &amp; alert analysis</span><span class="pill">Splunk</span><span class="pill">Azure Sentinel</span>
+            <span class="pill">Incident detection &amp; response</span><span class="pill">Log analysis</span><span class="pill">Cyber forensics</span>
+            <span class="pill">Cryptography &amp; hashing</span><span class="pill">SQL</span><span class="pill">SPL (Splunk)</span><span class="pill">KQL (Sentinel)</span>
+          </div>
+
+          <div class="pill-group-label">digital_forensics_toolkit:</div>
+          <div class="pill-row">
+            <span class="pill">Autopsy</span><span class="pill">FTK Imager</span><span class="pill">Registry Explorer</span>
+            <span class="pill">Volatility Workbench</span><span class="pill">Sysinternals Suite</span><span class="pill">ImHex</span><span class="pill">VMware Workstation Pro</span>
+          </div>
+
+          <div class="pill-group-label">cloud_security:</div>
+          <div class="pill-row">
+            <span class="pill">AWS security</span><span class="pill">Azure security</span><span class="pill">GCP security</span>
+          </div>
+
+          <div class="pill-group-label">scripting_automation:</div>
+          <div class="pill-row">
+            <span class="pill">Python</span><span class="pill">Bash</span>
+          </div>
+
+          <div class="pill-group-label">frameworks_standards:</div>
+          <div class="pill-row">
+            <span class="pill">MITRE ATT&amp;CK</span><span class="pill">NIST</span><span class="pill">ISO 27001</span><span class="pill">OWASP</span><span class="pill">Zero Trust Architecture (ZTA)</span>
+          </div>
+
+          <div class="pill-group-label">wireless_uav_security_research:</div>
+          <div class="pill-row">
+            <span class="pill">Network segmentation</span><span class="pill">Passkey / MFA authentication</span>
+            <span class="pill">Frequency Hopping Spread Spectrum (FHSS)</span><span class="pill">Direct Sequence Spread Spectrum (DSSS)</span>
+            <span class="pill">Intrusion Detection Systems (IDS)</span><span class="pill">Wireless security</span>
+          </div>
+
+          <div class="pill-group-label">networking_os:</div>
+          <div class="pill-row">
+            <span class="pill">TCP/IP</span><span class="pill">DNS</span><span class="pill">DHCP</span><span class="pill">VPNs</span>
+            <span class="pill">Packet analysis</span><span class="pill">Windows</span><span class="pill">Linux</span>
+          </div>
+
+          <div class="pill-group-label">enterprise_monitoring:</div>
+          <div class="pill-row">
+            <span class="pill">Dynatrace</span><span class="pill">Splunk</span><span class="pill">ServiceNow</span><span class="pill">Mainframe systems &amp; dashboards</span>
+          </div>
+
+          <div class="pill-group-label">offensive_security_ics_ot:</div>
+          <div class="pill-row">
+            <span class="pill">nmap</span><span class="pill">gobuster</span><span class="pill">ffuf</span><span class="pill">Burp Suite</span>
+            <span class="pill">Scapy</span><span class="pill">pyModbus</span><span class="pill">sqlmap</span><span class="pill">Hydra</span>
+            <span class="pill">Modbus</span><span class="pill">IEC 61850 / GOOSE</span>
+          </div>
+
+          <div class="pill-group-label">security_admin_tools:</div>
+          <div class="pill-row">
+            <span class="pill">Wireshark</span><span class="pill">tcpdump</span><span class="pill">Metasploit</span><span class="pill">Active Directory</span><span class="pill">PowerShell</span>
+          </div>
+
+          <div class="pill-group-label">languages:</div>
+          <div class="pill-row">
+            <span class="pill">English — Native/Bilingual</span><span class="pill">Hindi — Native/Bilingual</span><span class="pill">German — Elementary</span>
+          </div>
+        </div>
       </div>
-      <h3>Azure SIEM Home Lab</h3>
-      <div class="org">Azure Sentinel</div>
-      <ul>
-        <li>Implemented Azure Sentinel SIEM; deployed a Windows VM with open RDP to simulate attacks and analyze malicious traffic</li>
-        <li>Created alerts, dashboards, and incident workflows to understand SOC investigation processes</li>
-      </ul>
-    </div>
 
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">CASE-003 · RESEARCH</span>
-        <span class="badge complete">RESOLVED</span>
+      <div class="cmd-block" id="certs">
+        <div class="section-banner"><span class="num">05</span><span class="label">CERTIFICATIONS</span><span class="rule"></span></div>
+        <div class="prompt-line"><span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cmd">cat certifications.log</span></div>
+        <div class="out">
+          <div class="kv"><span class="k">[2025]</span> <span class="v">CompTIA Security+</span> — CompTIA</div>
+          <div class="kv"><span class="k">[2025]</span> <span class="v">Google Cybersecurity Professional Certificate</span> — Coursera</div>
+          <div class="kv"><span class="k">[2025]</span> <span class="v">Computer Forensics</span> — Infosec</div>
+        </div>
       </div>
-      <h3>Zero Trust Architecture &amp; UAVs</h3>
-      <div class="org">Security Research Paper</div>
-      <ul>
-        <li>Researched ZTA implementation for UAV systems, focusing on secure communication, frequency channels, and network segmentation</li>
-      </ul>
-    </div>
 
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">CASE-004 · GAME DEV</span>
-        <span class="badge complete">RESOLVED</span>
+      <div class="cmd-block" id="education">
+        <div class="section-banner"><span class="num">06</span><span class="label">EDUCATION</span><span class="rule"></span></div>
+        <div class="prompt-line"><span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cmd">cat education.log</span></div>
+        <div class="out">
+          <div class="entry">
+            <div class="entry-head">M.Sc. Digital Forensics and Information Security <span class="tag-status active">ACTIVE</span></div>
+            <div class="entry-org">National Forensic Sciences University (NFSU), Goa</div>
+            <div class="entry-dates">Started August 2026</div>
+          </div>
+          <div class="entry">
+            <div class="entry-head">B.C.A. — CTIS (Cloud Technology &amp; Information Security) <span class="tag-status closed">CLOSED</span></div>
+            <div class="entry-org">Jain (Deemed to be University), Computer Science</div>
+            <div class="entry-dates">September 2022 – April 2025</div>
+          </div>
+        </div>
       </div>
-      <h3>Indie Game Dev in Unity</h3>
-      <div class="org">Personal project — March 2024</div>
-      <ul>
-        <li>Built a small platformer and a barebones FPS in Unity, learning asset handling, maps, 3D geometry, sculpting, and physics</li>
-        <li>Assembled a Mario-inspired platformer largely from Unity's own assets while learning the engine's design workflow</li>
-      </ul>
-    </div>
-  </section>
 
-  <section id="skills">
-    <div class="section-head">
-      <h2>Skills</h2>
-    </div>
-
-    <div class="skill-group">
-      <h4>Security operations &amp; SOC</h4>
-      <div class="tag-row">
-        <span class="tag">SIEM monitoring &amp; alert analysis</span>
-        <span class="tag">Splunk</span>
-        <span class="tag">Azure Sentinel</span>
-        <span class="tag">Incident detection &amp; response</span>
-        <span class="tag">Log analysis</span>
-        <span class="tag">Cyber forensics</span>
-        <span class="tag">Cryptography &amp; hashing</span>
-        <span class="tag">SQL</span>
-        <span class="tag">SPL (Splunk)</span>
-        <span class="tag">KQL (Sentinel)</span>
+      <div class="cmd-block" id="contact">
+        <div class="section-banner"><span class="num">07</span><span class="label">CONTACT</span><span class="rule"></span></div>
+        <div class="prompt-line"><span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cmd">cat contact.txt</span></div>
+        <div class="out">
+          <div class="kv"><span class="k">email</span> <span class="v"><a href="mailto:harshahuja320@gmail.com">harshahuja320@gmail.com</a></span></div>
+          <div class="kv"><span class="k">phone</span> <span class="v">+91 8958080555</span></div>
+          <div class="kv"><span class="k">location</span> <span class="v">NFSU Goa</span></div>
+          <div class="kv"><span class="k">linkedin</span> <span class="v"><a href="https://www.linkedin.com/in/harsh-ahuja-87a47b1aa/" target="_blank" rel="noopener">linkedin.com/in/harsh-ahuja</a></span></div>
+          <div class="kv"><span class="k">github</span> <span class="v"><a href="https://github.com/sebby-049" target="_blank" rel="noopener">github.com/sebby-049</a></span></div>
+          <div class="kv"><span class="k">discord</span> <span class="v">sebbyactual</span></div>
+        </div>
       </div>
-    </div>
 
-    <div class="skill-group">
-      <h4>Digital forensics toolkit</h4>
-      <div class="tag-row">
-        <span class="tag">Autopsy</span>
-        <span class="tag">FTK Imager</span>
-        <span class="tag">Registry Explorer</span>
-        <span class="tag">Volatility Workbench</span>
-        <span class="tag">Sysinternals Suite</span>
-        <span class="tag">ImHex</span>
-        <span class="tag">VMware Workstation Pro</span>
+      <div class="prompt-line" style="margin-bottom:20px;">
+        <span class="user">root@harsh-ahuja</span><span class="path">:~$</span> <span class="cursor"></span>
       </div>
-    </div>
 
-    <div class="skill-group">
-      <h4>Cloud security</h4>
-      <div class="tag-row">
-        <span class="tag">AWS security</span>
-        <span class="tag">Azure security</span>
-        <span class="tag">GCP security</span>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <h4>Scripting &amp; automation</h4>
-      <div class="tag-row">
-        <span class="tag">Python</span>
-        <span class="tag">Bash</span>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <h4>Frameworks &amp; standards</h4>
-      <div class="tag-row">
-        <span class="tag">MITRE ATT&amp;CK</span>
-        <span class="tag">NIST</span>
-        <span class="tag">ISO 27001</span>
-        <span class="tag">OWASP</span>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <h4>Networking &amp; operating systems</h4>
-      <div class="tag-row">
-        <span class="tag">TCP/IP</span>
-        <span class="tag">DNS</span>
-        <span class="tag">DHCP</span>
-        <span class="tag">VPNs</span>
-        <span class="tag">Packet analysis</span>
-        <span class="tag">Windows</span>
-        <span class="tag">Linux</span>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <h4>Enterprise monitoring &amp; platforms</h4>
-      <div class="tag-row">
-        <span class="tag">Dynatrace</span>
-        <span class="tag">Splunk</span>
-        <span class="tag">ServiceNow</span>
-        <span class="tag">Mainframe systems &amp; dashboards</span>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <h4>Offensive security &amp; ICS/OT</h4>
-      <div class="tag-row">
-        <span class="tag">nmap</span>
-        <span class="tag">gobuster</span>
-        <span class="tag">ffuf</span>
-        <span class="tag">Burp Suite</span>
-        <span class="tag">Scapy</span>
-        <span class="tag">pyModbus</span>
-        <span class="tag">sqlmap</span>
-        <span class="tag">Hydra</span>
-        <span class="tag">Modbus</span>
-        <span class="tag">IEC 61850 / GOOSE</span>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <h4>Security &amp; administration tools</h4>
-      <div class="tag-row">
-        <span class="tag">Wireshark</span>
-        <span class="tag">tcpdump</span>
-        <span class="tag">Nmap</span>
-        <span class="tag">Metasploit</span>
-        <span class="tag">Active Directory</span>
-        <span class="tag">PowerShell</span>
-      </div>
-    </div>
-
-    <div class="skill-group">
-      <h4>Languages</h4>
-      <div class="tag-row">
-        <span class="tag">English — Native/Bilingual</span>
-        <span class="tag">Hindi — Native/Bilingual</span>
-        <span class="tag">German — Elementary</span>
-      </div>
-    </div>
-  </section>
-
-  <section id="certifications">
-    <div class="section-head">
-      <h2>Certifications</h2>
-      <span class="count">3 records</span>
-    </div>
-    <div class="log">
-      <div class="log-row"><span class="cert-name">CompTIA Security+</span><span class="cert-year mono">2025</span></div>
-      <div class="log-row"><span class="cert-name">Google Cybersecurity Professional Certificate — Coursera</span><span class="cert-year mono">2025</span></div>
-      <div class="log-row"><span class="cert-name">Computer Forensics — Infosec</span><span class="cert-year mono">2025</span></div>
-    </div>
-  </section>
-
-  <section id="education">
-    <div class="section-head">
-      <h2>Education</h2>
-    </div>
-    <div class="edu" style="margin-bottom:16px;">
-      <div class="ticket-top" style="margin-bottom:8px;">
-        <span class="ticket-id mono">EDU-002 · MSc</span>
-        <span class="badge active">ACTIVE</span>
-      </div>
-      <h3>Master of Science, Digital Forensics and Information Security</h3>
-      <div class="school">National Forensic Sciences University (NFSU), Goa</div>
-      <div class="years">Started August 2026</div>
-    </div>
-    <div class="edu">
-      <div class="ticket-top" style="margin-bottom:8px;">
-        <span class="ticket-id mono">EDU-001 · BCA</span>
-        <span class="badge closed">CLOSED</span>
-      </div>
-      <h3>Bachelor of Computer Application — CTIS (Cloud Technology &amp; Information Security)</h3>
-      <div class="school">Jain (Deemed to be University), Computer Science</div>
-      <div class="years">September 2022 – April 2025</div>
-    </div>
-  </section>
-
-  <section id="involvement">
-    <div class="section-head">
-      <h2>Campus Involvement</h2>
-      <span class="count">3 records</span>
-    </div>
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">ORG-000 · PLACEMENT COMMITTEE</span>
-        <span class="badge active">ACTIVE</span>
-      </div>
-      <h3>Placement Committee Member</h3>
-      <div class="org">National Forensic Sciences University (NFSU), Goa</div>
-      <div class="dates">August 2026 – Present</div>
-    </div>
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">ORG-001 · LITERARY FORUM</span>
-        <span class="badge closed">CLOSED</span>
-      </div>
-      <h3>Member, Artography</h3>
-      <div class="org">Samashti — The Student Council</div>
-      <div class="dates">October 2024 – May 2025</div>
-    </div>
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="ticket-id mono">ORG-002 · GAMING &amp; IT FORUM</span>
-        <span class="badge closed">CLOSED</span>
-      </div>
-      <h3>Member, Crackillusion</h3>
-      <div class="org">Samashti — The Student Council, Bengaluru</div>
-      <div class="dates">August 2022 – May 2025</div>
-    </div>
-  </section>
-
-</div>
-
-<footer>
-  <div class="wrap">
-    <span class="close-line">END OF RECORD</span>
-    <div class="contact-row">
-      <a href="mailto:harshahuja320@gmail.com">harshahuja320@gmail.com</a>
-      <span>+91 8958080555</span>
-      <a href="https://www.linkedin.com/in/harsh-ahuja-87a47b1aa/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/sebby-049" target="_blank" rel="noopener">GitHub</a>
-      <span>Discord: sebbyactual</span>
     </div>
   </div>
-</footer>
+
+  <footer>
+    <span>EOF — process exited 0</span>
+  </footer>
+</div>
+
+<script>
+  // ---------- scroll progress ----------
+  const progressBar = document.getElementById('scroll-progress');
+  function onScroll(){
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ---------- live clock + uptime (IST, 12hr) ----------
+  const clockEl = document.getElementById('clock');
+  const uptimeEl = document.getElementById('uptime');
+  const bootTime = Date.now();
+  function tick(){
+    if(!clockEl) return;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { hour12: true, timeZone: 'Asia/Kolkata' }).toUpperCase();
+    clockEl.textContent = timeStr;
+    const secs = Math.floor((Date.now() - bootTime) / 1000);
+    const m = String(Math.floor(secs / 60)).padStart(2,'0');
+    const s = String(secs % 60).padStart(2,'0');
+    uptimeEl.textContent = `uptime: ${m}m ${s}s`;
+  }
+  setInterval(tick, 1000);
+  tick();
+
+  // ---------- scroll reveal (position-based, robust for short/adjacent blocks) ----------
+  const revealEls = Array.from(document.querySelectorAll('.reveal, .cmd-block'));
+  function revealOnScroll(){
+    const triggerY = window.innerHeight * 0.92;
+    revealEls.forEach(el => {
+      if(el.classList.contains('visible')) return;
+      const rect = el.getBoundingClientRect();
+      if(rect.top < triggerY){
+        el.classList.add('visible');
+      }
+    });
+  }
+  window.addEventListener('scroll', revealOnScroll, { passive: true });
+  window.addEventListener('resize', revealOnScroll);
+  revealOnScroll();
+
+  // ---------- matrix rain ----------
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const chars = 'アイウエオカキクケコサシスセソ01アイウエオ$#&{}[]<>/\\';
+  let cols, drops, fontSize = 15;
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols = Math.floor(canvas.width / fontSize);
+    drops = Array.from({ length: cols }, () => Math.random() * -50);
+  }
+
+  function drawMatrix(){
+    ctx.fillStyle = 'rgba(2,4,2,0.08)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#3EFF3E';
+    ctx.font = fontSize + 'px monospace';
+    for(let i = 0; i < drops.length; i++){
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+      if(drops[i] * fontSize > canvas.height && Math.random() > 0.975){
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+    if(!reduceMotion) requestAnimationFrame(drawMatrix);
+  }
+
+  resize();
+  if(!reduceMotion){
+    drawMatrix();
+  } else {
+    ctx.fillStyle = 'rgba(2,4,2,1)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+</script>
 
 </body>
 </html>
