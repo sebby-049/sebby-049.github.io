@@ -277,14 +277,14 @@
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    width: 220px;
+    width: 236px;
     display: none;
     font-size: 11.5px;
     color: var(--text-faint);
     z-index: 3;
   }
-  #panel-left{ left: calc(50% - 430px - 250px); }
-  #panel-right{ right: calc(50% - 430px - 250px); }
+  #panel-left{ left: calc(50% - 430px - 260px); }
+  #panel-right{ right: calc(50% - 430px - 260px); }
   @media (min-width: 1480px){
     .side-panel{ display: block; }
   }
@@ -331,6 +331,38 @@
   #clock{ color: var(--text-bright); font-size: 15px; margin-bottom: 4px; }
   #uptime{ color: var(--text-faint); font-size: 11px; }
 
+  #access-log{
+    height: 210px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
+  .log-line{
+    opacity: 0;
+    animation: log-in 0.5s ease forwards;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .log-line:last-child{ border-bottom: none; }
+  .log-line .row1{ color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .log-line .row2{ color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .log-line .ts{ color: var(--text-faint); }
+  .log-line .ip{ color: var(--text-dim); }
+  .log-line .path{ color: var(--text-bright); }
+  .log-line .code{ color: var(--green); }
+  .log-line .code.warn{ color: var(--amber); }
+  @keyframes log-in{
+    from{ opacity: 0; transform: translateY(4px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .log-line{ animation: none; opacity: 1; }
+  }
+
   @media (max-width: 640px){
     .topbar nav{ display: none; }
     .ls-row .perm{ display:none; }
@@ -364,6 +396,10 @@
   <div class="panel-box">
     <div id="clock">00:00:00</div>
     <div id="uptime">uptime: --</div>
+  </div>
+  <div class="panel-box">
+    <div class="panel-title">// access.log</div>
+    <div id="access-log"></div>
   </div>
 </aside>
 
@@ -618,6 +654,45 @@
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // ---------- simulated access log ----------
+  const accessLog = document.getElementById('access-log');
+  const cities = ['Mumbai','Bengaluru','Goa','Delhi','Singapore','Frankfurt','London','Ashburn','Tokyo','Amsterdam'];
+  const paths = ['/whoami','/experience','/projects','/skills','/certs','/education','/contact'];
+  const reduceMotionLog = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MAX_LOG_LINES = 6;
+
+  function randIp(){
+    return `${Math.floor(Math.random()*223)+1}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+  }
+
+  function addLogLine(){
+    if(!accessLog) return;
+    const now = new Date();
+    const ts = now.toLocaleTimeString('en-GB', { hour12: false, timeZone: 'Asia/Kolkata' });
+    const ip = randIp();
+    const city = cities[Math.floor(Math.random() * cities.length)];
+    const path = paths[Math.floor(Math.random() * paths.length)];
+    const isWarn = Math.random() < 0.08;
+    const code = isWarn ? '403' : '200';
+
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = `
+      <div class="row1"><span class="ts">${ts}</span> <span class="ip">${ip}</span></div>
+      <div class="row2">${city} → <span class="path">${path}</span> <span class="code${isWarn ? ' warn' : ''}">${code}</span></div>
+    `;
+    accessLog.appendChild(line);
+
+    while(accessLog.children.length > MAX_LOG_LINES){
+      accessLog.removeChild(accessLog.firstChild);
+    }
+  }
+
+  for(let i = 0; i < 5; i++) addLogLine();
+  if(!reduceMotionLog){
+    setInterval(addLogLine, 3200);
+  }
 
   // ---------- live clock + uptime (IST, 12hr) ----------
   const clockEl = document.getElementById('clock');
